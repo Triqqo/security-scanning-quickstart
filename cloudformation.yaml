@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  TestRepo:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "app"
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: "MUTABLE"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+              "rules": [
+                  {
+                      "rulePriority": 1,
+                      "description": "Expire images older than 7 days",
+                      "selection": {
+                          "tagStatus": "any",
+                          "countType": "sinceImagePushed",
+                          "countUnit": "days",
+                          "countNumber": 7
+                      },
+                      "action": {
+                          "type": "expire"
+                      }
+                  }
+              ]
+          }
