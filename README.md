@@ -7,13 +7,16 @@ Get security scans running on a project quickly (ideally within a day), in a CI/
 2. Open license (commercial use not restricted)
 3. No upselling for basic features (for example, no paid upgrade required to cover all scans in a category)
 4. Usable in CI/CD pipelines (i.e. via a CLI or API, and in a container)
+5. Should exit > 0 if issues are found (ideally with configurable severity)
 
 ## Static code analysis
 ```
-# do something
+semgrep scan --config auto --exclude venv --error
+# or from a container
+docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep scan --config auto --exclude venv --error
 ```
 
-TODO: Find something that actually works
+TODO: Find something that actually works. Try Semgrep https://github.com/returntocorp/semgrep
 
 ## Open source libraries
 https://github.com/AppThreat/dep-scan
@@ -21,7 +24,7 @@ https://github.com/AppThreat/dep-scan
 docker run --rm -v $PWD:/app ghcr.io/appthreat/dep-scan --src /app --reports-dir /app/reports
 ```
 
-TODO: Check others (not a reputable source)
+TODO: Check others (maybe not a reputable source). Try Trivy: https://github.com/aquasecurity/trivy
 
 ## Containers
 ```
@@ -29,6 +32,8 @@ docker build -t app:latest .
 # do something
 ```
 - Checkov (see below) could have also been used, but requires a paid upgrade for anything beyond basic linting of the Dockerfile (i.e. container runtime scanning, base image vulnerabilities, etc.)
+
+TODO: Check Trivy: https://github.com/aquasecurity/trivy
 
 ## Infrastructure as Code
 Tool: Checkov

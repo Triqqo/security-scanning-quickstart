@@ -1,2 +1,4 @@
 boto3==1.26.95
 requests==2.28.2
+checkov==2.4.2
+semgrep==1.36.0
