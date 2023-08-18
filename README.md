@@ -16,7 +16,7 @@ semgrep scan --config auto --exclude venv --error
 docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep scan --config auto --exclude venv --error
 ```
 
-TODO: Find something that actually works. Try Semgrep https://github.com/returntocorp/semgrep
+TODO: Try Semgrep some more https://github.com/returntocorp/semgrep
 
 ## Open source libraries
 https://github.com/AppThreat/dep-scan
