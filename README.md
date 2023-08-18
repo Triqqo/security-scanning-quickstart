@@ -9,7 +9,27 @@ Get security scans running on a project quickly (ideally within a day), in a CI/
 
 ## Static code analysis
 ```
+# do something
+```
 
+## Open source libraries
+```
+pip install -r requirements.txt
+# do something
+```
+
+## Containers
+```
+docker build -t app:latest .
+# do something
+```
+
+## Infrastructure as Code
+Tool: Checkov
+License: Apache
+Repo: https://github.com/bridgecrewio/checkov/
+```
+# do something (checkov?)
 ```
 
 # Snyk alternative
