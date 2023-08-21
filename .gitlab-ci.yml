@@ -1,0 +1,59 @@
+stages:
+  - build
+  - security-scan
+
+build container:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+        --context "${CI_PROJECT_DIR}"
+        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+        --no-push
+        --destination app
+        --tar-path app.tar
+  artifacts:
+    paths:
+      - app.tar
+
+static code analysis:
+  stage: security-scan
+  image: returntocorp/semgrep
+  script:
+    - semgrep scan --config auto --exclude venv --error
+
+open source libraries:
+  stage: security-scan
+  image:
+    name: aquasec/trivy
+    entrypoint: [ "" ]
+  script:
+    - trivy filesystem .
+        --skip-dirs venv
+        --include-dev-deps
+        --severity MEDIUM,HIGH,CRITICAL
+        --exit-code 1
+
+container image:
+  stage: security-scan
+  image:
+    name: aquasec/trivy
+    entrypoint: [ "" ]
+  script:
+    - trivy image
+      --input app.tar
+      --severity HIGH,CRITICAL
+      --exit-code 1
+
+infrastructure as code:
+  stage: security-scan
+  image:
+    name: bridgecrew/checkov
+    entrypoint: [ "" ]
+  script:
+    - checkov
+        -d .
+        --skip-path venv
+        --quiet

@@ -10,6 +10,9 @@ Get security scans running on a project quickly (ideally within a day), in a CI/
 5. **Usable in CI/CD pipelines** (i.e. via a CLI or API, and in a container)
 6. **Should exit > 0 if issues are found** (ideally with configurable severity)
 
+### CI/CD implementation
+See `.gitlab-ci.yml`. Read on for command reference per category.
+
 ## Static code analysis
 Tool: Semgrep
 
