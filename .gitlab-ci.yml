@@ -30,7 +30,8 @@ open source libraries:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
-    - trivy filesystem .
+    - trivy filesystem $PWD
+        --no-progress
         --skip-dirs venv
         --include-dev-deps
         --severity MEDIUM,HIGH,CRITICAL
@@ -43,6 +44,7 @@ container image:
     entrypoint: [ "" ]
   script:
     - trivy image
+      --no-progress
       --input app.tar
       --severity MEDIUM,HIGH,CRITICAL
       --exit-code 1
@@ -54,6 +56,6 @@ infrastructure as code:
     entrypoint: [ "" ]
   script:
     - checkov
-        -d .
+        --directory $PWD
         --skip-path venv
         --quiet
