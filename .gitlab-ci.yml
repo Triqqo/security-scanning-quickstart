@@ -22,7 +22,7 @@ static code analysis:
   stage: security-scan
   image: returntocorp/semgrep
   script:
-    - semgrep scan --config auto --exclude venv --error
+    - semgrep scan --config auto --exclude venv --error .
 
 open source libraries:
   stage: security-scan
