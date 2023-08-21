@@ -48,6 +48,7 @@ container image:
       --input app.tar
       --severity MEDIUM,HIGH,CRITICAL
       --exit-code 1
+      --exit-on-eol 2
 
 infrastructure as code:
   stage: security-scan
