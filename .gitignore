@@ -1,4 +1,8 @@
+# IDE crap
 .dccache
 .idea
 *.iml
+# Scan results
 reports
+# Build output
+*.tar
