@@ -8,7 +8,7 @@ def main():
         exec(sys.argv[1])
     if os.getenv("SOME_INSECURE_VAR"):
         exec(os.getenv("SOME_INSECURE_VAR"))
-    print('hello')
+    exec("print('hello')")
 
 
 if __name__ == '__main__':
