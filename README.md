@@ -26,7 +26,7 @@ semgrep scan --config auto --exclude venv --error
 # or from a container
 docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep scan --config auto --exclude venv --error
 ```
-- Note: has a paid version which mostly seems for dashboards, but the CLI is usable without any account
+- Note: has a paid SaaS version, but the CLI is usable without any account
 
 ## Open source libraries
 Tool: Trivy
@@ -79,7 +79,7 @@ docker run \
   - For example: `docker run -v $PWD:/workspace aquasec/trivy config /workspace --skip-dirs venv --file-patterns dockerfile:Dockerfile`
   - Note that this also picks up the Cloudformation stack, even though the file-patterns flag is given. Hence it being experimental.
 - Checkov (see below) could have also been used, but requires a paid upgrade for anything beyond basic linting of the Dockerfile (i.e. container runtime scanning, base image vulnerabilities, etc.)
-  - Do note that basic linting of the Dockerfile is still wise to do with Checkov, as Trivy's config scanning seems to be in the experimental stage
+  - Note that basic linting of the Dockerfile is still wise to do with Checkov, as Trivy's config scanning seems to be in the experimental stage
 
 ## Infrastructure as Code
 Tool: Checkov
@@ -97,7 +97,7 @@ checkov -d . --skip-path venv --quiet
 - Note that `--quiet` only shows failed checks in the log
 - Use `--hard-fail-on SEVERITY` to only fail on that severity or higher (normally fails on all issues)
 - To display severity in the output, you need an API key for some reason...
-- Trivy also picks up misconfigrations for the Cloudformation stack (just as the Dockerfile, as described above). Note that this seems to be experimental:
+- Trivy also picks up misconfigurations of the Cloudformation stack (just as the Dockerfile, as described above). Note that this seems to be experimental:
   - `docker run -v $PWD:/workspace aquasec/trivy config /workspace --skip-dirs venv`
 
 ## All-In-One
@@ -110,6 +110,6 @@ Repo: https://github.com/ShiftLeftSecurity/sast-scan
 ```
 ❯ docker run --rm -e "WORKSPACE=${PWD}" -v $PWD:/app shiftleft/scan scan --build --type dockerfile,aws,python,depscan,credscan
 ```
-- Doesn't handle static code analysis very well (misses sys.argv injection in app.py)
+- Doesn't handle static code analysis very well (misses sys.argv injection in app.py, even though it reports that there are no issues in code)
 - Can also scan Docker images, but the report is borked. Needs either an exposed Docker socket or tarfile of the image (see readme in repo).
 - Uses several other tools as scanning engines (such as Checkov) based on which files it detects
