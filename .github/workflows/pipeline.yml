@@ -1,0 +1,16 @@
+name: security-scanning-quickstarts
+on: [push]
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          /kaniko/executor \
+            --context "${CI_PROJECT_DIR}" \
+            --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
+            --no-push \
+            --destination app \
+            --tar-path app.tar
