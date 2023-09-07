@@ -7,10 +7,10 @@ jobs:
       image: gcr.io/kaniko-project/executor:debug
     steps:
       - uses: actions/checkout@v1
-      - run: |
-          /kaniko/executor \
-            --context "${CI_PROJECT_DIR}" \
-            --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
-            --no-push \
-            --destination app \
+      - run: >
+          /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+            --no-push
+            --destination app
             --tar-path app.tar
