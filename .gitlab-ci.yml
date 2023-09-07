@@ -2,7 +2,7 @@ stages:
   - build
   - security-scan
 
-build container:
+build container image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
