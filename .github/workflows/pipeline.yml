@@ -14,3 +14,26 @@ jobs:
           --no-push
           --destination app
           --tar-path app.tar
+      - name: Upload image tar
+        uses: actions/upload-artifact@v3
+        with:
+          name: image
+          path: app.tar
+
+  scan-container:
+    needs: build-container
+    runs-on: ubuntu-latest
+    container:
+      image: aquasec/trivy
+    steps:
+      - name: Download image tar
+        uses: actions/download-artifact@v3
+        with:
+          name: image
+      - run: >-
+          trivy image
+          --no-progress
+          --input app.tar
+          --severity MEDIUM,HIGH,CRITICAL
+          --exit-code 1
+          --exit-on-eol 2
