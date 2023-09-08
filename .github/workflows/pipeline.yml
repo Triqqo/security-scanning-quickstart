@@ -38,8 +38,8 @@ jobs:
           --no-progress
           --input app.tar
           --severity MEDIUM,HIGH,CRITICAL
-          --exit-code 1
-          --exit-on-eol 2
+          --exit-code 42
+          --exit-on-eol 42
 
   scan-open-source-libs:
     name: Scan open source libraries
@@ -54,7 +54,7 @@ jobs:
           --skip-dirs venv
           --include-dev-deps
           --severity MEDIUM,HIGH,CRITICAL
-          --exit-code 1
+          --exit-code 42
 
   static-code-analysis:
     name: Static code analysis
