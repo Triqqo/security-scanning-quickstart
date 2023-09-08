@@ -2,6 +2,7 @@ name: security-scanning-quickstarts
 on: [push, workflow_dispatch]
 jobs:
   build-container:
+    name: Build container
     runs-on: ubuntu-latest
     container:
       image: gcr.io/kaniko-project/executor:debug
@@ -21,6 +22,7 @@ jobs:
           path: app.tar
 
   scan-container:
+    name: Scan container image
     needs: build-container
     runs-on: ubuntu-latest
     container:
@@ -37,3 +39,45 @@ jobs:
           --severity MEDIUM,HIGH,CRITICAL
           --exit-code 1
           --exit-on-eol 2
+
+  scan-open-source-libs:
+    name: Scan open source libraries
+    runs-on: ubuntu-latest
+    container:
+      image: aquasec/trivy
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          trivy filesystem $PWD
+          --no-progress
+          --skip-dirs venv
+          --include-dev-deps
+          --severity MEDIUM,HIGH,CRITICAL
+          --exit-code 1
+
+  static-code-analysis:
+    name: Static code analysis
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          semgrep scan 
+          --config auto 
+          --exclude venv 
+          --error
+          "${GITHUB_WORKSPACE}"
+
+  scan-iac:
+    name: Scan infrastructure as code
+    runs-on: ubuntu-latest
+    container:
+      image: bridgecrew/checkov
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          checkov
+          --directory "${GITHUB_WORKSPACE}"
+          --skip-path venv
+          --quiet
