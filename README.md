@@ -59,7 +59,7 @@ docker run \
   --skip-dirs venv \
   --include-dev-deps \
   --severity MEDIUM,HIGH,CRITICAL \
-  --exit-code 1
+  --exit-code 42
 ```
 - Trivy can also scan container images and open source libraries in one go (see below)
 - `--include-dev-deps` is only useful for npm and yarn (and therefore not this example repo), but is included here for reference.
@@ -86,10 +86,10 @@ docker run \
   image \
   --input /workspace/app.tar \
   --severity HIGH,CRITICAL \
-  --exit-code 1 \
-  --exit-on-eol 2
+  --exit-code 42 \
+  --exit-on-eol 43
 ```
-- `--exit-on-eol 2` makes it fail not just on vulnerabilities but also EOL OS distributions (such as Alpine 3.12 in this case)
+- `--exit-on-eol 43` makes it fail not just on vulnerabilities but also EOL OS distributions (such as Alpine 3.12 in this case)
 - Also scans open source libraries (so in this case Python packages), meaning you can scan both the container and libraries in one go.
 - Trivy can also scan Dockerfiles for misconfiguration 
   - For example: `docker run -v $PWD:/workspace aquasec/trivy config /workspace --skip-dirs venv --file-patterns dockerfile:Dockerfile`
