@@ -109,7 +109,7 @@ checkov -d . --skip-path venv --quiet
   - `docker run -v $PWD:/workspace aquasec/trivy config /workspace --skip-dirs venv`
 
 ## Other tools
-These tools aren't necessarily recommended, but might be interesting to look at as an alternative to the ones listed above:
+These tools aren't included in the example pipelines, and I haven't tested them much, but they might be interesting to look at as an alternative to the ones listed above:
 
 <details>
   <summary>Click to expand</summary>

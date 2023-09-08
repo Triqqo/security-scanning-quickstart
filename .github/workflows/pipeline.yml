@@ -3,7 +3,7 @@ on: [push, workflow_dispatch]
 permissions: read-all  # This is a checkov finding: CKV2_GHA_1
 jobs:
   build-container:
-    name: Build container
+    name: Build container image
     runs-on: ubuntu-latest
     container:
       image: gcr.io/kaniko-project/executor:debug
