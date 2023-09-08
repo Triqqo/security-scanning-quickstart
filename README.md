@@ -1,9 +1,10 @@
 # Open source security scanning quickstart for developers
 ### Goal
-Get security scans running on a project quickly (ideally within a day), in a CI/CD pipeline
+This repo aims to make getting started with security scanning on any software development project easy, ideally getting it running in a CI/CD pipeline within a day. Tools are selected for four different types of scans, and based on a set of requirements which should make them compatible with any (or at least most) projects.
 
 ### Requirements
-1. **Open source**
+I've picked the tools based on the following requirements:
+1. **Open source** and actively maintained
 2. **Open license** (commercial use not restricted)
 3. **Cross-platform, multi-language** (so that you can just drop this into a pipeline without needing to pick a specific tool for language X)
 4. **No upselling for basic features** (for example, no paid upgrade required to cover all scans in a category)
@@ -11,15 +12,22 @@ Get security scans running on a project quickly (ideally within a day), in a CI/
 6. **Should exit > 0 if issues are found** (ideally with configurable severity)
 
 ### CI/CD implementation
-This repo currently has two example implementations in Gitlab CI and GitHub Actions:
+There are currently two example implementations in Gitlab CI and GitHub Actions:
 - **Gitlab CI**: `.gitlab-ci.yml` 
 - **GitHub Actions**: `.github/workflows/pipeline.yml`
+Any other files in this repo 
 
 The repo itself is also mirrored to both Gitlab and GitHub:
 - https://gitlab.com/tettaji/security-scanning-quickstart
 - https://github.com/Triqqo/security-scanning-quickstart
 
-Read on for tool reference per category and how to run them locally.
+### Types of scans and their examples
+- [Static code analysis](#static-code-analysis) - example scans `app.py`
+- [Open source libraries](#open-source-libraries) - example scans `requirements.txt`
+- [Containers](#containers) - example scans `Dockerfile`
+- [Infrastructure as Code](#infrastructure-as-code) - example scans `cloudformation.yml` and `Dockerfile`
+
+Refer to each section for tool reference and how to run them locally, or refer to the [CI/CD implementation](#cicd-implementation) for CI/CD examples.
 
 ## Static code analysis
 Tool: Semgrep
