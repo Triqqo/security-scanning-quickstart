@@ -22,7 +22,7 @@ static code analysis:
   stage: security-scan
   image: returntocorp/semgrep
   script:
-    - semgrep scan --config auto --exclude venv --error .
+    - semgrep scan --config auto --error "${CI_PROJECT_DIR}"
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
@@ -34,9 +34,8 @@ open source libraries:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
-    - trivy filesystem $PWD
+    - trivy filesystem "${CI_PROJECT_DIR}"
         --no-progress
-        --skip-dirs venv
         --include-dev-deps
         --severity MEDIUM,HIGH,CRITICAL
         --exit-code 42
@@ -70,8 +69,7 @@ infrastructure as code:
     entrypoint: [ "" ]
   script:
     - checkov
-        --directory $PWD
-        --skip-path venv
+        --directory "${CI_PROJECT_DIR}"
         --quiet
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:

@@ -104,16 +104,19 @@ checkov -d . --skip-path venv --quiet
 - Trivy also picks up misconfigurations of the Cloudformation stack (just as the Dockerfile, as described above). Note that this seems to be experimental:
   - `docker run -v $PWD:/workspace aquasec/trivy config /workspace --skip-dirs venv`
 
-## All-In-One
-Tool: ShiftLeft Scan
+## Other tools
+These tools aren't necessarily recommended, but might be interesting to look at as an alternative to the ones listed above:
 
-License: MIT
+<details>
+  <summary>Click to expand</summary>
 
-Repo: https://github.com/ShiftLeftSecurity/sast-scan
+### All-in-one tools
+- ShiftLeft Scan: https://github.com/ShiftLeftSecurity/sast-scan
+  - Doesn't handle static code analysis very well (misses sys.argv injection in app.py, even though it reports that there are no issues in code)
+  - Can also scan Docker images, but the report is borked.
+  - Uses several other tools as scanning engines (such as Checkov) based on which files it detects
+- Megalinter: https://github.com/oxsecurity/megalinter
+  - Not just focused on security
+  - Uses several other tools as scanning engines (such as Checkov) based on which files it detects
 
-```
-❯ docker run --rm -e "WORKSPACE=${PWD}" -v $PWD:/app shiftleft/scan scan --build --type dockerfile,aws,python,depscan,credscan
-```
-- Doesn't handle static code analysis very well (misses sys.argv injection in app.py, even though it reports that there are no issues in code)
-- Can also scan Docker images, but the report is borked. Needs either an exposed Docker socket or tarfile of the image (see readme in repo).
-- Uses several other tools as scanning engines (such as Checkov) based on which files it detects
+</details>
