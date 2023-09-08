@@ -24,7 +24,7 @@ The repo itself is also mirrored to both Gitlab and GitHub:
 ### Types of scans and their examples
 - [Static code analysis](#static-code-analysis) - example scans `app.py`
 - [Open source libraries](#open-source-libraries) - example scans `requirements.txt`
-- [Containers](#containers) - example scans `Dockerfile`
+- [Containers](#containers) - example scans an `image.tar` built via Kaniko from the `Dockerfile`
 - [Infrastructure as Code](#infrastructure-as-code) - example scans `cloudformation.yml` and `Dockerfile`
 
 Refer to each section for tool reference and how to run them locally, or refer to the [CI/CD implementation](#cicd-implementation) for CI/CD examples.
