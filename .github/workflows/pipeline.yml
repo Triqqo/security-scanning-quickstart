@@ -39,7 +39,7 @@ jobs:
           --input app.tar
           --severity MEDIUM,HIGH,CRITICAL
           --exit-code 42
-          --exit-on-eol 42
+          --exit-on-eol 43
 
   scan-open-source-libs:
     name: Scan open source libraries
