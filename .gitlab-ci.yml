@@ -2,7 +2,7 @@ stages:
   - build
   - security-scan
 
-build container:
+build container image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
@@ -23,6 +23,10 @@ static code analysis:
   image: returntocorp/semgrep
   script:
     - semgrep scan --config auto --exclude venv --error .
+  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  allow_failure:
+    exit_codes:
+      - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
 
 open source libraries:
   stage: security-scan
@@ -35,7 +39,11 @@ open source libraries:
         --skip-dirs venv
         --include-dev-deps
         --severity MEDIUM,HIGH,CRITICAL
-        --exit-code 1
+        --exit-code 42
+  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  allow_failure:
+    exit_codes:
+      - 42
 
 container image:
   stage: security-scan
@@ -47,8 +55,13 @@ container image:
       --no-progress
       --input app.tar
       --severity MEDIUM,HIGH,CRITICAL
-      --exit-code 1
-      --exit-on-eol 2
+      --exit-code 42
+      --exit-on-eol 43
+  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  allow_failure:
+    exit_codes:
+      - 42
+      - 43
 
 infrastructure as code:
   stage: security-scan
@@ -60,3 +73,7 @@ infrastructure as code:
         --directory $PWD
         --skip-path venv
         --quiet
+  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  allow_failure:
+    exit_codes:
+      - 1  # means a successful scan, but with found issues. Otherwise it would exit 2

@@ -1,0 +1,84 @@
+name: security-scanning-quickstarts
+on: [push, workflow_dispatch]
+permissions: read-all  # This is a checkov finding: CKV2_GHA_1
+jobs:
+  build-container:
+    name: Build container
+    runs-on: ubuntu-latest
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          /kaniko/executor
+          --context "${GITHUB_WORKSPACE}"
+          --dockerfile "${GITHUB_WORKSPACE}/Dockerfile"
+          --no-push
+          --destination app
+          --tar-path app.tar
+      - name: Upload image tar
+        uses: actions/upload-artifact@v3
+        with:
+          name: image
+          path: app.tar
+
+  scan-container:
+    name: Scan container image
+    needs: build-container
+    runs-on: ubuntu-latest
+    container:
+      image: aquasec/trivy
+    steps:
+      - name: Download image tar
+        uses: actions/download-artifact@v3
+        with:
+          name: image
+      - run: >-
+          trivy image
+          --no-progress
+          --input app.tar
+          --severity MEDIUM,HIGH,CRITICAL
+          --exit-code 42
+          --exit-on-eol 42
+
+  scan-open-source-libs:
+    name: Scan open source libraries
+    runs-on: ubuntu-latest
+    container:
+      image: aquasec/trivy
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          trivy filesystem $PWD
+          --no-progress
+          --skip-dirs venv
+          --include-dev-deps
+          --severity MEDIUM,HIGH,CRITICAL
+          --exit-code 42
+
+  static-code-analysis:
+    name: Static code analysis
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          semgrep scan 
+          --config auto 
+          --exclude venv 
+          --error
+          "${GITHUB_WORKSPACE}"
+
+  scan-iac:
+    name: Scan infrastructure as code
+    runs-on: ubuntu-latest
+    container:
+      image: bridgecrew/checkov
+    steps:
+      - uses: actions/checkout@v1
+      - run: >-
+          checkov
+          --directory "${GITHUB_WORKSPACE}"
+          --skip-path venv
+          --quiet
