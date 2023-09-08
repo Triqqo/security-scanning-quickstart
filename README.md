@@ -11,7 +11,11 @@ Get security scans running on a project quickly (ideally within a day), in a CI/
 6. **Should exit > 0 if issues are found** (ideally with configurable severity)
 
 ### CI/CD implementation
-See `.gitlab-ci.yml`. Read on for command reference per category.
+This repo currently has two example implementations in Gitlab CI and GitHub Actions:
+- **Gitlab CI**: `.gitlab-ci.yml` 
+- **GitHub Actions**: `.github/workflows/pipeline.yml`
+
+Read on for tool reference per category and how to run them locally.
 
 ## Static code analysis
 Tool: Semgrep
