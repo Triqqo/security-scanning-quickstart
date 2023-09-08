@@ -15,6 +15,10 @@ This repo currently has two example implementations in Gitlab CI and GitHub Acti
 - **Gitlab CI**: `.gitlab-ci.yml` 
 - **GitHub Actions**: `.github/workflows/pipeline.yml`
 
+The repo itself is also mirrored to both Gitlab and GitHub:
+- https://gitlab.com/tettaji/security-scanning-quickstart
+- https://github.com/Triqqo/security-scanning-quickstart
+
 Read on for tool reference per category and how to run them locally.
 
 ## Static code analysis
