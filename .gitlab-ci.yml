@@ -1,77 +1,71 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  - build
-  - security-scan
-
+- build
+- security-scan
+- test
 build container image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
+    entrypoint:
+    - ''
   script:
-    - /kaniko/executor
-        --context "${CI_PROJECT_DIR}"
-        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-        --no-push
-        --destination app
-        --tar-path app.tar
+  - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+    --no-push --destination app --tar-path app.tar
   artifacts:
     paths:
-      - app.tar
-
+    - app.tar
 static code analysis:
   stage: security-scan
   image: returntocorp/semgrep
   script:
-    - semgrep scan --config auto --error "${CI_PROJECT_DIR}"
-  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  - semgrep scan --config auto --error "${CI_PROJECT_DIR}"
   allow_failure:
     exit_codes:
-      - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
-
+    - 1
 open source libraries:
   stage: security-scan
   image:
     name: aquasec/trivy
-    entrypoint: [ "" ]
+    entrypoint:
+    - ''
   script:
-    - trivy filesystem "${CI_PROJECT_DIR}"
-        --no-progress
-        --include-dev-deps
-        --severity MEDIUM,HIGH,CRITICAL
-        --exit-code 42
-  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  - trivy filesystem "${CI_PROJECT_DIR}" --no-progress --include-dev-deps --severity
+    MEDIUM,HIGH,CRITICAL --exit-code 42
   allow_failure:
     exit_codes:
-      - 42
-
+    - 42
 container image:
   stage: security-scan
   image:
     name: aquasec/trivy
-    entrypoint: [ "" ]
+    entrypoint:
+    - ''
   script:
-    - trivy image
-      --no-progress
-      --input app.tar
-      --severity MEDIUM,HIGH,CRITICAL
-      --exit-code 42
-      --exit-on-eol 43
-  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  - trivy image --no-progress --input app.tar --severity MEDIUM,HIGH,CRITICAL --exit-code
+    42 --exit-on-eol 43
   allow_failure:
     exit_codes:
-      - 42
-      - 43
-
+    - 42
+    - 43
 infrastructure as code:
   stage: security-scan
   image:
     name: bridgecrew/checkov
-    entrypoint: [ "" ]
+    entrypoint:
+    - ''
   script:
-    - checkov
-        --directory "${CI_PROJECT_DIR}"
-        --quiet
-  # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
+  - checkov --directory "${CI_PROJECT_DIR}" --quiet
   allow_failure:
     exit_codes:
-      - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
+    - 1
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
