@@ -91,9 +91,13 @@ infrastructure as code:
     name: bridgecrew/checkov
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
     - checkov
         --directory "${CI_PROJECT_DIR}"
         --quiet
+        --output cli
+        --output junitxml
+        --output-file-path console,reports/checkov-junit.xml
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
