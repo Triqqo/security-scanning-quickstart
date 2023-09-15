@@ -25,8 +25,8 @@ static code analysis:
     - semgrep scan 
         --config auto
         --error
-        --output reports/semgrep-report.json
-        --gitlab-sast
+        --output reports/semgrep-junit.xml
+        --junit-xml
         "${CI_PROJECT_DIR}"
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
@@ -34,7 +34,7 @@ static code analysis:
       - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
   artifacts:
     reports:
-      sast: reports/semgrep-report.json
+      junit: reports/semgrep-junit.xml
 
 open source libraries:
   stage: test
