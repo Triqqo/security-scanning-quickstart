@@ -102,3 +102,6 @@ infrastructure as code:
   allow_failure:
     exit_codes:
       - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
+  artifacts:
+    reports:
+      junit: reports/checkov-junit.xml
