@@ -22,6 +22,7 @@ static code analysis:
   stage: test
   image: returntocorp/semgrep
   script:
+    - mkdir -p reports
     - semgrep scan 
         --config auto
         --error
@@ -42,10 +43,11 @@ open source libraries:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
     - trivy filesystem "${CI_PROJECT_DIR}"
         --no-progress
         --include-dev-deps
-        --output reports/trivy-junit.xml
+        --output reports/trivy-filesystem-junit.xml
         --format template
         --template "@contrib/junit.tpl"
         --severity MEDIUM,HIGH,CRITICAL
@@ -56,7 +58,7 @@ open source libraries:
       - 42
   artifacts:
     reports:
-      junit: reports/trivy-junit.xml
+      junit: reports/trivy-filesystem-junit.xml
 
 container image:
   stage: test
@@ -64,9 +66,13 @@ container image:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
     - trivy image
       --no-progress
       --input app.tar
+      --output reports/trivy-image-junit.xml
+      --format template
+      --template "@contrib/junit.tpl"
       --severity MEDIUM,HIGH,CRITICAL
       --exit-code 42
       --exit-on-eol 43
@@ -75,6 +81,9 @@ container image:
     exit_codes:
       - 42
       - 43
+  artifacts:
+    reports:
+      junit: reports/trivy-image-junit.xml
 
 infrastructure as code:
   stage: test
