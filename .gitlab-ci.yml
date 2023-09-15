@@ -1,6 +1,6 @@
 stages:
   - build
-  - security-scan
+  - test
 
 build container image:
   stage: build
@@ -19,7 +19,7 @@ build container image:
       - app.tar
 
 static code analysis:
-  stage: security-scan
+  stage: test
   image: returntocorp/semgrep
   script:
     - semgrep scan 
@@ -37,7 +37,7 @@ static code analysis:
       sast: reports/semgrep-report.json
 
 open source libraries:
-  stage: security-scan
+  stage: test
   image:
     name: aquasec/trivy
     entrypoint: [ "" ]
@@ -53,7 +53,7 @@ open source libraries:
       - 42
 
 container image:
-  stage: security-scan
+  stage: test
   image:
     name: aquasec/trivy
     entrypoint: [ "" ]
@@ -71,7 +71,7 @@ container image:
       - 43
 
 infrastructure as code:
-  stage: security-scan
+  stage: test
   image:
     name: bridgecrew/checkov
     entrypoint: [ "" ]
