@@ -1,4 +1,4 @@
-# Open source security scanning quickstart for developers
+# Security scanning quickstart for developers
 ### Goal
 This repo aims to make getting started with security scanning on any software development project easy, ideally getting it running in a CI/CD pipeline within a day. Tools are selected for four different types of scans, and based on a set of requirements which should make them compatible with any (or at least most) projects.
 
