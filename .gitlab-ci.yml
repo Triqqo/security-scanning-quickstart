@@ -44,6 +44,8 @@ open source libraries:
     entrypoint: [ "" ]
   script:
     - mkdir -p reports
+    # Note: the following generates a JUnit report and doesn't output results to build logs
+    # Use `--format json` followed by `trivy convert` to use multiple / different output formats
     - trivy filesystem "${CI_PROJECT_DIR}"
         --no-progress
         --include-dev-deps
@@ -67,6 +69,8 @@ container image:
     entrypoint: [ "" ]
   script:
     - mkdir -p reports
+    # Note: the following generates a JUnit report and doesn't output results to build logs
+    # Use `--format json` followed by `trivy convert` to use multiple / different output formats
     - trivy image
       --no-progress
       --input app.tar
