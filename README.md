@@ -42,7 +42,8 @@ semgrep scan --config auto --exclude venv --error
 # or from a container
 docker run --rm -v "${PWD}:/src" returntocorp/semgrep semgrep scan --config auto --exclude venv --error
 ```
-- Note: has a paid SaaS version, but the CLI is usable without any account
+- Note: has a paid SaaS version, but the `semgrep scan` CLI command is usable without an account
+- Can be picky about what it detects with the default rules. For example, detects `hashlib.new('md5', ...)` but not `hashlib.md5(...)`. Probably because the default rules are community-maintained. It's also possible to create your own rules.
 
 ## Open source libraries
 Tool: Trivy
