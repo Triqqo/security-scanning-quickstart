@@ -28,7 +28,7 @@ static code analysis:
     - semgrep scan 
         --config auto
         --error
-        --output reports/semgrep-junit.xml
+        --output "${CI_PROJECT_DIR}/reports/semgrep-junit.xml"
         --junit-xml
   after_script:
     - ls -al
