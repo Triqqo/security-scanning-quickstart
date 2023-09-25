@@ -23,18 +23,12 @@ static code analysis:
   image: returntocorp/semgrep
   script:
     - mkdir -p reports
-    - pwd
-    - ls -al
     - semgrep scan 
         --config auto
         --error
         --output reports/semgrep-junit.xml
         --junit-xml
         .
-  after_script:
-    - ls -al
-    - ls -al reports
-    - find / -name semgrep-junit.xml
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
