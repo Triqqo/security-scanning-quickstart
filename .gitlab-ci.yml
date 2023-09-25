@@ -30,6 +30,7 @@ static code analysis:
         --error
         --output reports/semgrep-junit.xml
         --junit-xml
+  after_script:
     - ls -al
     - ls -al reports
     - find / -name semgrep-junit.xml
