@@ -33,7 +33,6 @@ def disabled_tls_verification():
     requests.get('https://example.com', verify=False)
 
 
-# This is undetected, looking for an alternative
 def logger_credential_leak():
     logging.basicConfig()
     logger = logging.getLogger()
@@ -42,7 +41,10 @@ def logger_credential_leak():
     secret = 'somesecret'
     body = {'somekey': 'somevalue'}
     response = requests.post(url='https://example.com', headers={'Authorization': f'Bearer {secret}'}, json=body)
-    logger.info(f"sent request with body: {response.request.body}, headers: {response.request.headers}")
+    # This is undetected, looking for an alternative scanner that does detect this
+    logger.info("sent request with body: %s, headers: %s", response.request.body, response.request.headers)
+    # This is detected, but is a bit basic
+    logger.info("sent request with secret %s", secret)
 
 
 def main():
