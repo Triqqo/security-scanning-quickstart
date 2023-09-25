@@ -28,11 +28,12 @@ static code analysis:
         --error
         --output reports/semgrep-junit.xml
         --junit-xml
-        "${CI_PROJECT_DIR}"
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
       - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
+  # Note: JUnit reports in Gitlab have a limitation where multiple findings of the same type
+  # will only show the last finding in the Gitlab UI and be counted once
   artifacts:
     reports:
       junit: reports/semgrep-junit.xml
