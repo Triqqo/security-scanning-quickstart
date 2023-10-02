@@ -38,6 +38,7 @@ def logger_credential_leak():
     logger = logging.getLogger()
     logger.setLevel('INFO')
 
+    # The fact that this is hardcoded should also be detected, but currently isn't
     secret = 'somesecret'
     body = {'somekey': 'somevalue'}
     response = requests.post(url='https://example.com', headers={'Authorization': f'Bearer {secret}'}, json=body)
