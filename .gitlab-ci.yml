@@ -1,6 +1,6 @@
 stages:
   - build
-  - security-scan
+  - test
 
 build container image:
   stage: build
@@ -19,40 +19,66 @@ build container image:
       - app.tar
 
 static code analysis:
-  stage: security-scan
+  stage: test
   image: returntocorp/semgrep
   script:
-    - semgrep scan --config auto --error "${CI_PROJECT_DIR}"
+    - mkdir -p reports
+    - semgrep scan 
+        --config auto
+        --error
+        --output reports/semgrep-junit.xml
+        --junit-xml
+        .
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
       - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
+  # Note: JUnit reports in Gitlab have a limitation where multiple findings of the same type
+  # will only show the last finding in the Gitlab UI and be counted once
+  artifacts:
+    reports:
+      junit: reports/semgrep-junit.xml
 
 open source libraries:
-  stage: security-scan
+  stage: test
   image:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
+    # Note: the following generates a JUnit report and doesn't output results to build logs
+    # Use `--format json` followed by `trivy convert` to use multiple / different output formats
     - trivy filesystem "${CI_PROJECT_DIR}"
         --no-progress
         --include-dev-deps
+        --output reports/trivy-filesystem-junit.xml
+        --format template
+        --template "@/contrib/junit.tpl"
         --severity MEDIUM,HIGH,CRITICAL
         --exit-code 42
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
       - 42
+  artifacts:
+    reports:
+      junit: reports/trivy-filesystem-junit.xml
 
 container image:
-  stage: security-scan
+  stage: test
   image:
     name: aquasec/trivy
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
+    # Note: the following generates a JUnit report and doesn't output results to build logs
+    # Use `--format json` followed by `trivy convert` to use multiple / different output formats
     - trivy image
       --no-progress
       --input app.tar
+      --output reports/trivy-image-junit.xml
+      --format template
+      --template "@/contrib/junit.tpl"
       --severity MEDIUM,HIGH,CRITICAL
       --exit-code 42
       --exit-on-eol 43
@@ -61,17 +87,27 @@ container image:
     exit_codes:
       - 42
       - 43
+  artifacts:
+    reports:
+      junit: reports/trivy-image-junit.xml
 
 infrastructure as code:
-  stage: security-scan
+  stage: test
   image:
     name: bridgecrew/checkov
     entrypoint: [ "" ]
   script:
+    - mkdir -p reports
     - checkov
         --directory "${CI_PROJECT_DIR}"
         --quiet
+        --output cli
+        --output junitxml
+        --output-file-path console,reports/checkov-junit.xml
   # Normally you would not allow failures, but this makes it explicit that the scan succeeded, while issues are found.
   allow_failure:
     exit_codes:
       - 1  # means a successful scan, but with found issues. Otherwise it would exit 2
+  artifacts:
+    reports:
+      junit: reports/checkov-junit.xml
