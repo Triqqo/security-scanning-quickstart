@@ -53,6 +53,7 @@ def main():
     insecure_hash()
     disabled_tls_verification()
     logger_credential_leak()
+    print("Hallo")
 
 
 if __name__ == '__main__':
